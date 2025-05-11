@@ -164,10 +164,12 @@
     <button class="share-button" onclick="shareOnWhatsApp()">💬 Share on WhatsApp</button><br>
   </div>
 
+  <!-- Music permission -->
   <div id="musicArea" style="display:none;">
     <button class="music-button" onclick="startMusic()">▶ Start Music</button>
   </div>
 
+  <!-- Reveal -->
   <div class="reveal-area" id="revealArea" style="display:none;">
     <button class="reveal-button" onclick="revealMessage()">💌 See the love letter</button>
   </div>
@@ -237,11 +239,8 @@
     }
 
     function startMusic() {
-      music.play().then(() => {
-        musicArea.style.display = "none";
-      }).catch(() => {
-        alert("Please tap again to start music.");
-      });
+      // iOS only accepts a pure user-triggered play
+      document.getElementById('bgMusic').play();
     }
 
     const urlMsgRaw = getQueryParam("msg");
@@ -250,7 +249,7 @@
       letterText.innerHTML = `<div>${msg}</div>`;
       formArea.style.display = "none";
       revealArea.style.display = "block";
-      musicArea.style.display = "block"; // Start music manually on mobile
+      musicArea.style.display = "block"; // Let user start music
     }
 
     setInterval(createHeart, 200);
