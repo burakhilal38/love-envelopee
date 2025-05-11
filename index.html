@@ -1,4 +1,3 @@
-<!-- Sadece düzenlenmiş tam HTML. Tüm mobil cihazlarda çalışır ve zarf tıklanabilir. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -131,7 +130,7 @@
       }
     }
 
-    .button, .share-button, .reveal-button {
+    .button, .share-button, .reveal-button, .music-button {
       margin-top: 10px;
       padding: 10px 20px;
       border: none;
@@ -147,6 +146,10 @@
       background: #25D366;
     }
 
+    .music-button {
+      background: #7e57c2;
+    }
+
     audio {
       position: absolute;
       left: -9999px;
@@ -160,16 +163,19 @@
     <input type="text" id="nameInput" placeholder="Your lover's name"><br>
     <textarea id="messageInput" rows="3" placeholder="Write your message..."></textarea><br>
     <button class="button" onclick="updateMessage()">Show</button><br>
-    <button class="share-button" onclick="shareOnWhatsApp()">💬 Share on WhatsApp</button>
+    <button class="share-button" onclick="shareOnWhatsApp()">💬 Share on WhatsApp</button><br>
   </div>
 
-  <!-- Reveal Button Area -->
+  <!-- Music Permission -->
+  <button id="musicStart" class="music-button" style="display:none;" onclick="startMusic()">▶ Start Music</button>
+
+  <!-- Reveal -->
   <div class="reveal-area" id="revealArea" style="display:none;">
     <button class="reveal-button" onclick="revealMessage()">💌 See the love letter</button>
   </div>
 
   <!-- Envelope -->
-  <div class="envelope" id="envelope" onclick="toggleEnvelope()">
+  <div class="envelope" id="envelope">
     <div class="flap"></div>
     <div class="letter" id="letterText">Your love message will appear here 💖</div>
   </div>
@@ -180,7 +186,6 @@
   <!-- Music -->
   <audio id="bgMusic" loop preload="auto">
     <source src="music/muzik.mp3" type="audio/mpeg">
-    Your browser does not support audio playback.
   </audio>
 
   <script>
@@ -190,6 +195,7 @@
     const music = document.getElementById('bgMusic');
     const formArea = document.getElementById('formArea');
     const revealArea = document.getElementById('revealArea');
+    const musicButton = document.getElementById('musicStart');
 
     function getQueryParam(param) {
       const urlParams = new URLSearchParams(window.location.search);
@@ -207,7 +213,6 @@
       const msg = document.getElementById("messageInput").value || "I love you 💌";
       const encodedMsg = encodeURIComponent(msg);
       const fullLink = `${window.location.origin}/?msg=${encodedMsg}`;
-      music.play().catch(() => {});
       setTimeout(() => {
         window.open(`https://wa.me/?text=${encodeURIComponent(fullLink)}`, '_blank');
       }, 200);
@@ -215,7 +220,9 @@
 
     function toggleEnvelope() {
       envelope.classList.add('open');
-      music.play().catch(() => {});
+      music.play().catch(() => {
+        musicButton.style.display = "block";
+      });
     }
 
     function createHeart() {
@@ -229,12 +236,16 @@
     }
 
     function revealMessage() {
+      toggleEnvelope();
+      setInterval(createHeart, 200);
+      revealArea.style.display = "none";
+    }
+
+    function startMusic() {
       music.play().then(() => {
-        toggleEnvelope();
-        setInterval(createHeart, 200);
-        revealArea.style.display = "none";
+        musicButton.style.display = "none";
       }).catch(() => {
-        alert("To hear the music, please tap the screen again 🎵");
+        alert("Please tap again to start music.");
       });
     }
 
@@ -244,6 +255,7 @@
       letterText.innerHTML = `<div>${msg}</div>`;
       formArea.style.display = "none";
       revealArea.style.display = "block";
+      musicButton.style.display = "block"; // Show music start on shared link
     }
 
     setInterval(createHeart, 200);
