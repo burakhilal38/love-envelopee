@@ -1,3 +1,5 @@
+<!-- Satırların başına ek açıklama eklenmedi, doğrudan tam sürüm olarak sunulmuştur. -->
+<!-- Bu kod, WhatsApp'tan gelen linklerde mesajı göstermek için "See the love letter" butonu kullanır ve tıklanınca müzik + animasyon başlatır. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +18,7 @@
       overflow: hidden;
     }
 
-    .form-area {
+    .form-area, .reveal-area {
       margin-bottom: 20px;
       text-align: center;
     }
@@ -130,7 +132,7 @@
       }
     }
 
-    .button {
+    .button, .share-button, .reveal-button {
       margin-top: 10px;
       padding: 10px 20px;
       border: none;
@@ -143,14 +145,7 @@
     }
 
     .share-button {
-      margin-top: 8px;
-      padding: 8px 16px;
       background: #25D366;
-      color: white;
-      border: none;
-      border-radius: 20px;
-      font-weight: bold;
-      cursor: pointer;
     }
 
     audio {
@@ -168,10 +163,15 @@
     <button class="share-button" onclick="shareOnWhatsApp()">💬 Share on WhatsApp</button>
   </div>
 
+  <!-- Reveal Button Area -->
+  <div class="reveal-area" id="revealArea" style="display:none;">
+    <button class="reveal-button" onclick="revealMessage()">💌 See the love letter</button>
+  </div>
+
   <!-- Envelope -->
   <div class="envelope" id="envelope">
     <div class="flap"></div>
-    <div class="letter" id="letterText">Fill in the form above 💌</div>
+    <div class="letter" id="letterText">Your love message will appear here 💖</div>
   </div>
 
   <!-- Hearts -->
@@ -189,6 +189,7 @@
     const heartsContainer = document.getElementById('hearts');
     const music = document.getElementById('bgMusic');
     const formArea = document.getElementById('formArea');
+    const revealArea = document.getElementById('revealArea');
 
     function getQueryParam(param) {
       const urlParams = new URLSearchParams(window.location.search);
@@ -206,10 +207,10 @@
       const msg = document.getElementById("messageInput").value || "I love you 💌";
       const encodedMsg = encodeURIComponent(msg);
       const fullLink = `${window.location.origin}/?msg=${encodedMsg}`;
-      music.play().catch(() => {}); // müzik tetikle
+      music.play().catch(() => {});
       setTimeout(() => {
         window.open(`https://wa.me/?text=${encodeURIComponent(fullLink)}`, '_blank');
-      }, 200); // 200ms gecikme = müzik çalma şansı daha yüksek
+      }, 200);
     }
 
     function toggleEnvelope() {
@@ -227,19 +228,22 @@
       setTimeout(() => heart.remove(), 2000);
     }
 
-    setInterval(createHeart, 200);
+    function revealMessage() {
+      toggleEnvelope();
+      setInterval(createHeart, 200);
+      revealArea.style.display = "none";
+    }
 
-    // Sayfa açıldığında URL'den msg varsa mektubu göster
+    // Mesaj linkten geldiyse sadece reveal butonunu göster
     const urlMsgRaw = getQueryParam("msg");
     if (urlMsgRaw) {
       const msg = decodeURIComponent(urlMsgRaw);
       letterText.innerHTML = `<div>${msg}</div>`;
       formArea.style.display = "none";
-      toggleEnvelope(); // zarfı aç
-      setTimeout(() => {
-        music.play().catch(() => {});
-      }, 500); // özellikle mobilde geç izin veriyor
+      revealArea.style.display = "block";
     }
+
+    setInterval(createHeart, 200); // Her durumda kalpler uçsun
   </script>
 </body>
 </html>
