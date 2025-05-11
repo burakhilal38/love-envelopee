@@ -129,7 +129,7 @@
       }
     }
 
-    .button, .share-button, .reveal-button, .music-button {
+    .button, .share-button, .reveal-button {
       margin-top: 10px;
       padding: 10px 20px;
       border: none;
@@ -145,8 +145,28 @@
       background: #25D366;
     }
 
-    .music-button {
+    #permissionOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    #permissionOverlay button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
       background: #7e57c2;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
     }
 
     audio {
@@ -157,16 +177,18 @@
 </head>
 <body>
 
+  <!-- Audio permission overlay -->
+  <div id="permissionOverlay">
+    <p>🔊 To hear the music, tap the button below:</p>
+    <button onclick="grantMusicPermission()">▶ Allow Sound</button>
+  </div>
+
+  <!-- Form -->
   <div class="form-area" id="formArea">
     <input type="text" id="nameInput" placeholder="Your lover's name"><br>
     <textarea id="messageInput" rows="3" placeholder="Write your message..."></textarea><br>
     <button class="button" onclick="updateMessage()">Show</button><br>
-    <button class="share-button" onclick="shareOnWhatsApp()">💬 Share on WhatsApp</button><br>
-  </div>
-
-  <!-- Music permission -->
-  <div id="musicArea" style="display:none;">
-    <button class="music-button" onclick="startMusic()">▶ Start Music</button>
+    <button class="share-button" onclick="shareOnWhatsApp()">💬 Share on WhatsApp</button>
   </div>
 
   <!-- Reveal -->
@@ -174,13 +196,16 @@
     <button class="reveal-button" onclick="revealMessage()">💌 See the love letter</button>
   </div>
 
+  <!-- Envelope -->
   <div class="envelope" id="envelope">
     <div class="flap"></div>
     <div class="letter" id="letterText">Your love message will appear here 💖</div>
   </div>
 
+  <!-- Hearts -->
   <div class="hearts" id="hearts"></div>
 
+  <!-- Music -->
   <audio id="bgMusic" loop preload="auto">
     <source src="music/muzik.mp3" type="audio/mpeg" />
   </audio>
@@ -192,7 +217,15 @@
     const music = document.getElementById('bgMusic');
     const formArea = document.getElementById('formArea');
     const revealArea = document.getElementById('revealArea');
-    const musicArea = document.getElementById('musicArea');
+    const permissionOverlay = document.getElementById('permissionOverlay');
+
+    function grantMusicPermission() {
+      music.play().then(() => {
+        permissionOverlay.style.display = "none";
+      }).catch(() => {
+        alert("Tap again to allow sound.");
+      });
+    }
 
     function getQueryParam(param) {
       const urlParams = new URLSearchParams(window.location.search);
@@ -217,9 +250,6 @@
 
     function toggleEnvelope() {
       envelope.classList.add('open');
-      music.play().catch(() => {
-        musicArea.style.display = "block";
-      });
     }
 
     function createHeart() {
@@ -238,18 +268,12 @@
       revealArea.style.display = "none";
     }
 
-    function startMusic() {
-      // iOS only accepts a pure user-triggered play
-      document.getElementById('bgMusic').play();
-    }
-
     const urlMsgRaw = getQueryParam("msg");
     if (urlMsgRaw) {
       const msg = decodeURIComponent(urlMsgRaw);
       letterText.innerHTML = `<div>${msg}</div>`;
       formArea.style.display = "none";
       revealArea.style.display = "block";
-      musicArea.style.display = "block"; // Let user start music
     }
 
     setInterval(createHeart, 200);
