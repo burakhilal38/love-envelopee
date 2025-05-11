@@ -38,6 +38,7 @@
       border-radius: 6px;
       overflow: hidden;
       box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      cursor: pointer;
     }
 
     .flap {
@@ -129,7 +130,7 @@
       }
     }
 
-    .button, .share-button, .reveal-button, .music-button {
+    .button, .share-button, .reveal-button {
       margin-top: 10px;
       padding: 10px 20px;
       border: none;
@@ -145,10 +146,6 @@
       background: #25D366;
     }
 
-    .music-button {
-      background: #7e57c2;
-    }
-
     audio {
       position: absolute;
       left: -9999px;
@@ -157,28 +154,29 @@
 </head>
 <body>
 
+  <!-- Form -->
   <div class="form-area" id="formArea">
     <input type="text" id="nameInput" placeholder="Your lover's name"><br>
     <textarea id="messageInput" rows="3" placeholder="Write your message..."></textarea><br>
     <button class="button" onclick="updateMessage()">Show</button><br>
-    <button class="share-button" onclick="shareOnWhatsApp()">💬 Share on WhatsApp</button><br>
+    <button class="share-button" onclick="shareOnWhatsApp()">💬 Share on WhatsApp</button>
   </div>
 
-  <div id="musicArea" style="display:none;">
-    <button class="music-button" onclick="startMusic()">▶ Start Music</button>
-  </div>
-
+  <!-- Reveal -->
   <div class="reveal-area" id="revealArea" style="display:none;">
     <button class="reveal-button" onclick="revealMessage()">💌 See the love letter</button>
   </div>
 
+  <!-- Envelope -->
   <div class="envelope" id="envelope">
     <div class="flap"></div>
     <div class="letter" id="letterText">Your love message will appear here 💖</div>
   </div>
 
+  <!-- Hearts -->
   <div class="hearts" id="hearts"></div>
 
+  <!-- Music -->
   <audio id="bgMusic" loop preload="auto">
     <source src="music/muzik.mp3" type="audio/mpeg" />
   </audio>
@@ -190,7 +188,6 @@
     const music = document.getElementById('bgMusic');
     const formArea = document.getElementById('formArea');
     const revealArea = document.getElementById('revealArea');
-    const musicArea = document.getElementById('musicArea');
 
     function getQueryParam(param) {
       const urlParams = new URLSearchParams(window.location.search);
@@ -200,23 +197,24 @@
     function updateMessage() {
       const name = document.getElementById("nameInput").value || "My Love";
       const msg = document.getElementById("messageInput").value || "I love you so much 💌";
-      letterText.innerHTML = <div><strong>For ${name}</strong></div><div>${msg}</div>;
+      letterText.innerHTML = `<div><strong>For ${name}</strong></div><div>${msg}</div>`;
       toggleEnvelope();
     }
 
     function shareOnWhatsApp() {
       const msg = document.getElementById("messageInput").value || "I love you 💌";
       const encodedMsg = encodeURIComponent(msg);
-      const fullLink = ${window.location.origin}/?msg=${encodedMsg};
+      const fullLink = `${window.location.origin}/?msg=${encodedMsg}`;
       setTimeout(() => {
-        window.open(https://wa.me/?text=${encodeURIComponent(fullLink)}, '_blank');
+        window.open(`https://wa.me/?text=${encodeURIComponent(fullLink)}`, '_blank');
       }, 200);
     }
 
     function toggleEnvelope() {
       envelope.classList.add('open');
       music.play().catch(() => {
-        musicArea.style.display = "block";
+        // Safari engellerse sessiz geç
+        console.warn("Music play blocked by browser.");
       });
     }
 
@@ -236,24 +234,15 @@
       revealArea.style.display = "none";
     }
 
-    function startMusic() {
-      music.play().then(() => {
-        musicArea.style.display = "none";
-      }).catch(() => {
-        alert("Please tap again to start music.");
-      });
-    }
-
     const urlMsgRaw = getQueryParam("msg");
     if (urlMsgRaw) {
       const msg = decodeURIComponent(urlMsgRaw);
-      letterText.innerHTML = <div>${msg}</div>;
+      letterText.innerHTML = `<div>${msg}</div>`;
       formArea.style.display = "none";
       revealArea.style.display = "block";
-      musicArea.style.display = "block"; // Start music manually on mobile
     }
 
     setInterval(createHeart, 200);
   </script>
 </body>
-</html> 
+</html>
