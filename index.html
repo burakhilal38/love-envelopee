@@ -1,5 +1,3 @@
-<!-- Satırların başına ek açıklama eklenmedi, doğrudan tam sürüm olarak sunulmuştur. -->
-<!-- Bu kod, WhatsApp'tan gelen linklerde mesajı göstermek için "See the love letter" butonu kullanır ve tıklanınca müzik + animasyon başlatır. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -149,7 +147,8 @@
     }
 
     audio {
-      display: none;
+      position: absolute;
+      left: -9999px;
     }
   </style>
 </head>
@@ -178,7 +177,7 @@
   <div class="hearts" id="hearts"></div>
 
   <!-- Music -->
-  <audio id="bgMusic" loop>
+  <audio id="bgMusic" loop preload="auto">
     <source src="music/muzik.mp3" type="audio/mpeg">
     Your browser does not support audio playback.
   </audio>
@@ -229,12 +228,12 @@
     }
 
     function revealMessage() {
+      music.play().catch(() => {});
       toggleEnvelope();
       setInterval(createHeart, 200);
       revealArea.style.display = "none";
     }
 
-    // Mesaj linkten geldiyse sadece reveal butonunu göster
     const urlMsgRaw = getQueryParam("msg");
     if (urlMsgRaw) {
       const msg = decodeURIComponent(urlMsgRaw);
@@ -243,7 +242,7 @@
       revealArea.style.display = "block";
     }
 
-    setInterval(createHeart, 200); // Her durumda kalpler uçsun
+    setInterval(createHeart, 200); // always float hearts
   </script>
 </body>
 </html>
