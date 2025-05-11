@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <title>Personalized Love Envelope</title>
+  <title>Özel Aşk Mektubu</title>
   <style>
     body {
       margin: 0;
@@ -156,21 +156,21 @@
 
   <!-- Form -->
   <div class="form-area" id="formArea">
-    <input type="text" id="nameInput" placeholder="Your lover's name"><br>
-    <textarea id="messageInput" rows="3" placeholder="Write your message..."></textarea><br>
-    <button class="button" onclick="updateMessage()">Show</button><br>
-    <button class="share-button" onclick="shareOnWhatsApp()">💬 Share on WhatsApp</button>
+    <input type="text" id="nameInput" placeholder="Sevdiğinizin adı"><br>
+    <textarea id="messageInput" rows="3" placeholder="Mesajınızı yazın..."></textarea><br>
+    <button class="button" onclick="updateMessage()">Göster</button><br>
+    <button class="share-button" onclick="shareOnWhatsApp()">💬 WhatsApp'ta Paylaş</button>
   </div>
 
   <!-- Reveal Button Area -->
   <div class="reveal-area" id="revealArea" style="display:none;">
-    <button class="reveal-button" onclick="revealMessage()">💌 See the love letter</button>
+    <button class="reveal-button" onclick="revealMessage()">💌 Mektubu Gör</button>
   </div>
 
   <!-- Envelope -->
   <div class="envelope" id="envelope">
     <div class="flap"></div>
-    <div class="letter" id="letterText">Your love message will appear here 💖</div>
+    <div class="letter" id="letterText">Aşk mesajınız burada görünecek 💖</div>
   </div>
 
   <!-- Hearts -->
@@ -179,7 +179,7 @@
   <!-- Music -->
   <audio id="bgMusic" loop preload="auto">
     <source src="music/muzik.mp3" type="audio/mpeg">
-    Your browser does not support audio playback.
+    Tarayıcınız ses oynatmayı desteklemiyor.
   </audio>
 
   <script>
@@ -196,14 +196,14 @@
     }
 
     function updateMessage() {
-      const name = document.getElementById("nameInput").value || "My Love";
-      const msg = document.getElementById("messageInput").value || "I love you so much 💌";
-      letterText.innerHTML = `<div><strong>For ${name}</strong></div><div>${msg}</div>`;
+      const name = document.getElementById("nameInput").value || "Sevgilim";
+      const msg = document.getElementById("messageInput").value || "Seni çok seviyorum 💌";
+      letterText.innerHTML = `<div><strong>${name} için</strong></div><div>${msg}</div>`;
       toggleEnvelope();
     }
 
     function shareOnWhatsApp() {
-      const msg = document.getElementById("messageInput").value || "I love you 💌";
+      const msg = document.getElementById("messageInput").value || "Seni seviyorum 💌";
       const encodedMsg = encodeURIComponent(msg);
       const fullLink = `${window.location.origin}/?msg=${encodedMsg}`;
       music.play().catch(() => {});
@@ -242,7 +242,7 @@
       revealArea.style.display = "block";
     }
 
-    setInterval(createHeart, 200); // always float hearts
+    setInterval(createHeart, 200); // Kalpler her durumda uçsun
   </script>
 </body>
 </html>
